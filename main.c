@@ -8,6 +8,7 @@ int main()
 {
     print_starting_cmd();
     InputBuffer* input_buffer = new_input_buffer();
+    Table *table = new_table();
 
     while(1) {
             print_prompt();
