@@ -3,7 +3,29 @@
 #include "helpingFunc.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
+#define COLUMN_USR_NAME_SIZE    32
+#define COLUMN_EMAIL_SIZE       255
+
+#define size_of_attribute(Struct, Attribute) sizeof(((Struct*)0)->Attribute)
+
+#define TABLE_MAX_PAGES 100  // number of pages in the table
+#define PAGE_SIZE       4096 // per page size in bytes
+
+#define ROWS_PER_PAGE
+
+
+typedef struct _row {
+    uint32_t id;
+    char username[COLUMN_USR_NAME_SIZE];
+    char email[COLUMN_EMAIL_SIZE];
+}Row;
+
+typedef struct _table {
+    uint32_t num_rows;
+    void *pages[TABLE_MAX_PAGES];
+}Table;
 
 
 typedef struct _inputBuffer_t {
@@ -18,11 +40,15 @@ typedef enum {
 
 typedef struct _statement_t {
     StatementType type;
+    Row row_to_insert;
 } Statement;
 
 typedef enum {
     PREPARE_SUCCESS,
-    PREPARE_UNRECOGNIZED_STATEMENT
+    PREPARE_UNRECOGNIZED_STATEMENT,
+    PREPARE_SYNTAX_ERROR,
+    PREPARE_NEGATIVE_ID,
+    PREPARE_STRING_TOO_LONG
 }PrepareResult;
 
 typedef enum {
@@ -34,4 +60,15 @@ typedef enum {
     META_CMD_SUCCESS,
     META_CMD_UNRECOGNIZED_CMD
 }MetaCmdExecuteResult;
+
+
+#define ID_SIZE         size_of_attribute(Row, id)
+#define USERNAME_SIZE   size_of_attribute(Row, username)
+#define EMAIL_SIZE      size_of_attribute(Row, email)
+#define ROW_SIZE        ID_SIZE + USERNAME_SIZE + EMAIL_SIZE
+
+#define ID_OFFSET       0
+#define USERNAME_OFFSET ID_OFFSET + USERNAME_SIZE
+#define EMAIL_OFFSET    USERNAME_OFFSET + USERNAME_SIZE
+
 #endif // MAIN_H_INCLUDED
