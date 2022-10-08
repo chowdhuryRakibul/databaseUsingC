@@ -17,5 +17,6 @@ PrepareResult prepare_insert(InputBuffer* input_buffer, Statement* statement);
 Table *new_table();
 void free_table(Table* pTable);
 PrepareResult prepare_select(Statement* statement, Table* table);
+void *row_slot(Table *table, uint32_t row_num);
 
 #endif // HELPINGFUNC_H_INCLUDED

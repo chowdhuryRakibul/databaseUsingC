@@ -41,11 +41,25 @@ StringTokenResult isToken(char* buffer, char* token)
     return STRING_TOKEN_UNMATCHED;
 }
 
+void *row_slot(Table *table, uint32_t row_num) {
+    uint32_t row_size = ROW_SIZE;
+    uint32_t rows_per_page = ROWS_PER_PAGE;
+    uint32_t page_num = row_num/rows_per_page;
+    void *page = table->pages[page_num];
+    if (page == NULL) {
+        page = table->pages[page_num] = malloc(PAGE_SIZE);
+    }
+
+    uint32_t row_offset = row_num % rows_per_page;
+    uint32_t byte_offset = row_offset * row_size;
+
+    return (page + byte_offset);
+}
+
 MetaCmdExecuteResult execute_meta_cmd(InputBuffer* input_buffer)
 {
     if(isToken(&(input_buffer->buffer[1]), "exit") == STRING_TOKEN_MATCHED) {
         free_input_buffer(input_buffer);
-//        free_table();
         exit(EXIT_SUCCESS);
     } else if (0) {
         printf("will do later");
