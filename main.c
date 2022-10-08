@@ -9,7 +9,6 @@ int main()
     print_starting_cmd();
     InputBuffer* input_buffer = new_input_buffer();
     Table *table = new_table();
-
     while(1) {
             print_prompt();
             // read from cmd line
@@ -46,7 +45,18 @@ int main()
                     break;
             }
 
-//            execute_statement(statement);
+            switch(execute_statement(&statement,table)) {
+                case EXECUTE_CMD_SUCCESS:
+                    break;
+                case EXECUTE_CMD_FAILURE:
+                    printf("Cmd failed\r\n");
+                    break;
+                case EXECUTE_TABLE_FULL:
+                    printf("Table is full\r\n");
+                    break;
+                default:
+                    break;
+            }
             printf("Executed\r\n");
     }
     return 0;

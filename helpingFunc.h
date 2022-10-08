@@ -18,4 +18,13 @@ Table *new_table();
 void free_table(Table* pTable);
 PrepareResult prepare_select(Statement* statement, Table* table);
 
+void serialize_row(Row* source, void *destination);
+void deserialize_row(void *source, Row *destination);
+
+ExecuteResult execute_statement(Statement *statement, Table* table);
+ExecuteResult execute_select(Statement *statement, Table* table);
+void *row_slot(Table* table, uint32_t row_num);
+void print_row(Row row);
+ExecuteResult execute_insert(Statement *statement, Table* table);
+
 #endif // HELPINGFUNC_H_INCLUDED
